@@ -57,11 +57,14 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Server running on port ${PORT}`);
-  // eslint-disable-next-line no-console
-  console.log(`Visit http://localhost:${PORT} to see the app`);
-});
+// Only start the server if this file is run directly
+if (require.main === module) {
+  app.listen(PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Server running on port ${PORT}`);
+    // eslint-disable-next-line no-console
+    console.log(`Visit http://localhost:${PORT} to see the app`);
+  });
+}
 
 module.exports = app;
