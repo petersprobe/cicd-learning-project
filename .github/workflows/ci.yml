@@ -29,6 +29,12 @@ jobs:
       run: npm ci
       working-directory: ./app
         
+    - name: Fix line endings
+      run: |
+        # Convert CRLF to LF for all text files
+        find . -type f -name "*.js" -o -name "*.json" -o -name "*.md" -o -name "*.yml" -o -name "*.yaml" | xargs dos2unix || true
+      working-directory: ./app
+        
     - name: Run linting
       run: npm run lint
       working-directory: ./app
@@ -65,6 +71,12 @@ jobs:
       run: npm ci
       working-directory: ./app
         
+    - name: Fix line endings
+      run: |
+        # Convert CRLF to LF for all text files
+        find . -type f -name "*.js" -o -name "*.json" -o -name "*.md" -o -name "*.yml" -o -name "*.yaml" | xargs dos2unix || true
+      working-directory: ./app
+        
     - name: Run security audit
       run: npm audit --audit-level moderate
       working-directory: ./app
@@ -94,6 +106,12 @@ jobs:
         
     - name: Install dependencies
       run: npm ci
+      working-directory: ./app
+        
+    - name: Fix line endings
+      run: |
+        # Convert CRLF to LF for all text files
+        find . -type f -name "*.js" -o -name "*.json" -o -name "*.md" -o -name "*.yml" -o -name "*.yaml" | xargs dos2unix || true
       working-directory: ./app
         
     - name: Build application

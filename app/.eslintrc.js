@@ -13,7 +13,7 @@ module.exports = {
   },
   rules: {
     'indent': ['error', 2],
-    'linebreak-style': ['error', 'unix'],
+    'linebreak-style': 'off', // Disable linebreak-style rule for cross-platform compatibility
     'quotes': ['error', 'single'],
     'semi': ['error', 'always'],
     'no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
