@@ -44,7 +44,7 @@ jobs:
       working-directory: ./app
         
     - name: Upload coverage reports
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       if: matrix.node-version == '18'
       with:
         file: ./app/coverage/lcov.info
@@ -122,7 +122,7 @@ jobs:
       working-directory: ./app
         
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build-files
         path: |
