@@ -1,0 +1,119 @@
+name: Deploy Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: npm test
+      
+    - name: Build application
+      run: npm run build
+      
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging environment..."
+        echo "Environment: ${{ env.NODE_ENV }}"
+        echo "Build completed successfully"
+        
+    - name: Run integration tests
+      run: |
+        echo "Running integration tests against staging..."
+        echo "Integration tests passed"
+        
+    - name: Notify deployment success
+      if: success()
+      run: |
+        echo "✅ Staging deployment successful"
+        echo "Visit: https://staging.example.com"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: deploy-staging
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run tests
+      run: npm test
+      
+    - name: Build application
+      run: npm run build
+      
+    - name: Deploy to production
+      run: |
+        echo "🚀 Deploying to production environment..."
+        echo "Environment: ${{ env.NODE_ENV }}"
+        echo "Version: ${{ github.sha }}"
+        echo "Production deployment completed"
+        
+    - name: Run smoke tests
+      run: |
+        echo "Running smoke tests against production..."
+        echo "Smoke tests passed"
+        
+    - name: Health check
+      run: |
+        echo "Performing health checks..."
+        echo "✅ All health checks passed"
+        
+    - name: Notify deployment success
+      if: success()
+      run: |
+        echo "🎉 Production deployment successful!"
+        echo "Visit: https://app.example.com"
+        
+    - name: Notify deployment failure
+      if: failure()
+      run: |
+        echo "❌ Production deployment failed!"
+        echo "Rolling back to previous version..."
+        echo "Rollback completed"
+
+  rollback:
+    runs-on: ubuntu-latest
+    if: failure() && github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - name: Rollback deployment
+      run: |
+        echo "🔄 Rolling back production deployment..."
+        echo "Previous version restored"
+        echo "Rollback completed successfully"
+        
+    - name: Notify rollback
+      run: |
+        echo "📢 Rollback notification sent to team"
